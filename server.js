@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express()
+const bcrypt = require('bcrypt')
 
 app.use(express.json())
 
@@ -9,12 +10,21 @@ app.get('/users',(req,res) =>{
     res.json(users)
 })
 
-app.post('/users',(req,res)=>{
-    const user = { 
-        name: req.body.name, 
-        password:req.body.password 
+app.post('/users', async (req,res)=>{
+    try{
+        const salt = await bcrypt.genSalt()
+        const hashPassword = await bcrypt.hash(req.body.password, salt)
+        console.log(salt)
+        console.log(hashPassword)
+        const user = { 
+            name: req.body.name, 
+            password: hashPassword 
+        }
+        users.push(user)
+        res.status(200).send("User was created")
     }
-    users.push(user)
-    res.status(200).send("User was created")
+    catch{
+        res.status(500).send("Something went wrong!")
+    }
 })
 app.listen(3000)
