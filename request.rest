@@ -1,18 +1,19 @@
-GET http://localhost:3000/api/user/users
+GET http://localhost:4000/api/user/users
 
 ###
 
-POST http://localhost:3000/api/user/register
+POST http://localhost:4000/api/user/register
 Content-Type: application/json
 
 {
-    "name":"TestUser1",
-    "password":"password"
+    "name":"ankijailwal",
+    "email":"jailwalankit@gmail.com",
+    "password":"may13s1993"
 }
 
 ###
 
-POST http://localhost:3000/api/user/login
+POST http://localhost:4000/api/user/login
 Content-Type: application/json
 
 {
