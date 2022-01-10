@@ -4,7 +4,7 @@ const { registerValidation, loginValidation } = require('../validation')
 const bcrypt = require('bcrypt')
 
 router.get('/users', (req, res) => {
-    res.json("Hello world")
+    res.status(200).send(User)
 })
 
 router.post('/register', async (req, res) => {
@@ -29,29 +29,29 @@ router.post('/register', async (req, res) => {
     });
     try {
         const saveUser = await user.save()
-        res.send(saveUser)
+        res.send({user: user._id})
     }
     catch (err) {
         res.status(400).send(err)
     }
 })
 
-// router.post('/login', async (req, res) => {
-//     // const user = users.find(user => user.name === req.body.name)
-//     // if (user == null) {
-//     //     return res.status(400).send("Cannot find user")
-//     // }
-//     // try {
-//     //     if (await bcrypt.compare(req.body.password, user.password)) {
-//     //         res.send("Success")
-//     //     }
-//     //     else {
-//     //         res.send("Not allowed")
-//     //     }
-//     // }
-//     // catch {
-//     //     res.status(500).send("Something went wrong!")
-//     // }
-//     res.status(200).send("Working fine!")
-// })
+router.post('/login', async (req, res) => {
+    // Checking if email already exists
+    const user = await User.findOne({email:req.body.email})
+    if(!user) return res.status(400).send("Email does not exist!")
+
+    try {
+        // Checking if password is correct
+        if (await bcrypt.compare(req.body.password, user.password)) {
+            res.status(200).send("Logged In")
+        }
+        else {
+            res.status(400).send("Password is incorrect")
+        }
+    }
+    catch(err) {
+        res.status(500).send(err)
+    }
+})
 module.exports = router
